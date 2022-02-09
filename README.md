@@ -1,6 +1,6 @@
 # LeetCode Solutions
 
-This repository consists of all the LeetCode questions I solved using Python3. The repository will be updated everytime I solve new questions. I might even solve questions in other languages in the future but currently I am sticking with Python.
+This repository consists of all the LeetCode questions I solved using Python3. The repository will be updated every time I solve new questions. I might even solve questions in other languages in the future but currently I am sticking with Python.
 
 <!-- ## Languages Used:
 
@@ -76,14 +76,15 @@ _Click on the Problem Number to get redirected to the Question in [Leet Code Web
 _Click on the Programming Language name to get redirected to solution file in this repository_
 
 <!-- table of solutions -->
-
-| Question No. | Id. | Name    | Solutions           | Last Update      |
-| ------------ | --- | ------- | ------------------- | ---------------- |
-| [1][p1]      | 1   | Two Sum | [Python][#1 python] | 2022-02-09 10:29 |
+| Question No. | Id. |        Name       |      Solutions      |   Last Update    |
+|--------------|-----|-------------------|---------------------|------------------|
+| [1][p1]      | 1   | Two Sum           | [Python][#1 python] | 2022-02-09 10:29 |
+| [9][p9]      | 9   | Palindrome Number | [Python][#9 python] | 2022-02-09 11:34 |
 
 [p1]: https://leetcode.com/problems/two-sum/
+[p9]: https://leetcode.com/problems/palindrome-number/
 [#1 python]: solution/%231%20Two%20Sum/Solution.py
-
+[#9 python]: solution/%239%20Palindrome%20Number/Solution.py
 <!-- end of table of solutions -->
 
 _Some solutions may not be efficient though it works._
