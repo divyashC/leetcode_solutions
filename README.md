@@ -76,7 +76,12 @@ _Click on the Problem Number to get redirected to the Question in [Leet Code Web
 _Click on the Programming Language name to get redirected to solution file in this repository_
 
 <!-- table of solutions -->
+|   No.   | Id. |   Name  |      Solutions      |   Last Update    |
+|---------|-----|---------|---------------------|------------------|
+| [1][p1] | 1   | Two Sum | [Python][#1 python] | 2022-02-09 10:29 |
 
+[p1]: https://leetcode-cn.com/problems/two-sum/
+[#1 python]: solution/%231%20Two%20Sum/Solution.py
 <!-- end of table of solutions -->
 
 _Some solutions may not be efficient though it works._
