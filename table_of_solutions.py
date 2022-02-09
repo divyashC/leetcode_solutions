@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.8
 # -*- coding: UTF-8 -*-
 
-# 生成用于README.md文件的解法文件目录
-# 通过扫描src的子文件夹，解析文件名，生成Markdown规范的文件
+# Generate solution file directory for README.md file
+# Generate Markdown specification files by scanning subfolders of src, parsing file names
 
 """
 -------------------------------------------------------------------------
@@ -35,6 +35,7 @@ def error(message, *args):
 
 
 class Language(enum.Enum):
+    """ represents the programming language used for the solution """
     Kotlin = enum.auto()
     Java = enum.auto()
     Python = enum.auto()
@@ -43,41 +44,77 @@ class Language(enum.Enum):
 
 
 class Metadata:
+    """ represents the meta information of a topic obtained by the LeetCode API
+    :type id: int
+    :type frontend_id: str
+    :type title: str
+    :type slug: str
+    :type difficulty: int
+    :type site_url: str
+    """
 
     def __init__(self, metadata):
         self.id = metadata[0]
+        """ Question number """
         self.frontend_id = metadata[1]
+        """ Question number displayed on the interface """
         self.title = metadata[2]
+        """ Title name """
         self.slug = metadata[3]
+        """ for English names in URLs """
         self.difficulty = metadata[4]
+        """ Question difficulty """
         self.site_url = f"https://leetcode.com/problems/{self.slug}/"
+        """ URL of the question """
 
     def __repr__(self) -> str:
         return f"Id.{self.id}: [{self.slug}] {self.title} {'★' * self.difficulty}"
 
 
 class Solution:
+    """ represents a solution to a problem
+    :type problem_no: int
+    :type category: Language
+    :type solution: str
+    :type last_upd: datetime.datetime
+    """
 
     def __init__(self, metadata_):
         self.problem_no = metadata_[0]
+        """ Problem solved """
         self.category = metadata_[1]
+        """ Use language """
         self.solution = metadata_[2]
+        """ The relative path of the file in the project """
         self.last_upd = metadata_[3]
+        """ Last update time of the file """
 
     def __repr__(self) -> str:
         return f"No.{self.problem_no}: [{self.category}] {self.solution} @ {self.last_upd}"
 
 
 class Problem:
+    """ represents a LeetCode topic
+    :type ordinal: int
+    :type display: str
+    :type solutions: list of Solutions
+    :type metadata: Metadata or None
+    """
 
     def __init__(self, metadata_):
         self.ordinal = metadata_[0]
+        """ Actual serial number """
         self.display = metadata_[1]
+        """ Title name """
         self.solutions = []
+        """ Implemented solution """
         self.metadata = None
+        """ Meta information associated with the title """
 
     @property
     def site_url(self) -> Optional[str]:
+        """ URL of the topic """
+
         if self.metadata:
             return self.metadata.site_url
         else:
@@ -106,12 +143,19 @@ def scan_for_problems():
     repo = git.Repo('.')
 
     def scan_for_solutions_internal(root_tree, what_todo):
+        """
+        :type root_tree: git.Tree
+        :type what_todo: (git.Blob) -> None
+        """
 
         for blob in root_tree:
             if not blob.name.startswith('.'):
                 what_todo(blob)
 
     def scan_language_dir(tree):
+        """
+        :type tree: git.Blob | git.Tree
+        """
 
         if not isinstance(tree, git.Tree):
             return
@@ -129,6 +173,10 @@ def scan_for_problems():
                 tree, lambda p: scan_solution_file(problem, p))
 
     def scan_solution_file(problem, blob):
+        """
+        :type problem: Problem
+        :type blob: git.Blob | git.Tree
+        """
 
         if not isinstance(blob, git.Blob):
             return
@@ -147,10 +195,10 @@ def scan_for_problems():
 
     def resolve_language(file_name: str):
         return next(iter([v for k, v in {
-            '.java'     : Language.Java,
-            '.kt'       : Language.Kotlin,
-            '.py'       : Language.Python,
-            '.bash.sh'  : Language.Bash,
+            '.java': Language.Java,
+            '.kt': Language.Kotlin,
+            '.py': Language.Python,
+            '.bash.sh': Language.Bash,
             '.mysql.sql': Language.MySQL,
         }.items() if file_name.endswith(k)]), None)
 
@@ -186,11 +234,17 @@ def scan_for_problems():
                 error("could not found metadata for %s", problem)
 
     with fetch_metadata_from_remote():
-        scan_for_solutions_internal(repo.tree() / 'solution', scan_language_dir)
+        scan_for_solutions_internal(
+            repo.tree() / 'solution', scan_language_dir)
     return sorted(solutions.values())
 
 
 class MarkdownTableGenerator:
+    """
+    Markdown Table Generator
+    :type table: MarkdownTableGenerator.ElasticTable
+    :type links: list of MarkdownTableGenerator.MarkdownLink
+    """
 
     def __init__(self, problems: Iterable[Problem]):
         self.table = self.ElasticTable(
@@ -198,6 +252,7 @@ class MarkdownTableGenerator:
         self.links = list()
 
         self.pad_column = True
+        """Add a space to the left and right of the element"""
 
         for problem in problems:
 
@@ -206,6 +261,7 @@ class MarkdownTableGenerator:
                 continue
 
             def for_frontend(p: Problem):
+                """Generates No."""
 
                 if p.metadata is None:
                     return "-"
@@ -220,16 +276,19 @@ class MarkdownTableGenerator:
                 return link.render_in_table()
 
             def for_ordinal(p: Problem):
+                """Generate id. The text of this column"""
 
-                if p.metadata is None :
+                if p.metadata is None:
                     return str(p.ordinal)
                 else:
                     return str(p.metadata.id)
 
             def for_problem(p: Problem):
+                """ Generate the text of Name"""
                 return p.display
 
             def for_solution(s: Solution):
+                """Generate text of Solutions"""
                 link = self.SolutionLink(
                     solution=s,
                     text=s.category.name,
@@ -249,12 +308,21 @@ class MarkdownTableGenerator:
             ))
 
     class ElasticTable:
+        """Adjustable width table
+                : type header: tuple[str]
+                : type column: int
+                : type widths: tuple[int]
+                : type bodies: list[tuple[str]]"""
 
         def __init__(self, header):
             self.header = header
+            """ Table Header """
             self.column = len(header)
+            """ Number of columns """
             self.widths = tuple(len(s) for s in self.header)
+            """ Width of each column """
             self.bodies = list()
+            """ The table content does not include headers, separator lines """
 
         def add_row(self, row: Tuple[str, ...]):
             assert len(row) == self.column
@@ -268,11 +336,22 @@ class MarkdownTableGenerator:
             return f"{dict(zip(self.header, self.widths))}({len(self.bodies)})"
 
     class MarkdownLink(abc.ABC):
+        """ Markdown Link reference ::
+            [text][label]
+            [label]: destination
+        https://github.github.com/gfm/#link-reference-definition
+        :type text: str
+        :type label: str
+        :type destination: str
+        """
 
         def __init__(self, *, text, label, href):
             self.text = text
+            """ Visible text """
             self.label = label
+            """ Internal flag """
             self.destination = href
+            """ target address """
 
         def render_in_table(self):
             return f"[{self.text}][{self.label}]"
@@ -288,25 +367,38 @@ class MarkdownTableGenerator:
             return f"[{self.text}][{self.label}]: {self.destination}"
 
     class SolutionLink(MarkdownLink):
+        """ Solution Link reference
+        :type solution: Solution
+        """
 
         def __init__(self, solution, *, text, label, href):
             super().__init__(text=text, label=label, href=href)
             self.solution = solution
+            """ solution object pointed to by """
 
     class ProblemLink(MarkdownLink):
+        """ Problem Link reference
+        deprecated, don't put a link on the title, put it on the serial number
+        :type problem: Problem
+        """
 
         def __init__(self, problem, *, text, label, href):
             super().__init__(text=text, label=label, href=href)
             self.problem = problem
+            """ solution object pointed to by """
 
         def render_in_footer(self):
             return f"[{self.label}]: {self.destination}"
 
     class OrdinalLink(MarkdownLink):
+        """ Ordinal Link reference
+        :type problem: Problem
+        """
 
         def __init__(self, problem, *, text, label, href):
             super().__init__(text=text, label=label, href=href)
             self.problem = problem
+            """Pointing method"""
 
         def render_in_footer(self):
             return f"[{self.label}]: {self.destination}"
@@ -317,6 +409,7 @@ class MarkdownTableGenerator:
         pad = 2 if self.pad_column else 0
 
         def p_fix_join(s: Iterable[str]):
+            """ Append prefix and postfix to string """
             return "|".join(('', *s, ''))
 
         def print_header():
@@ -333,7 +426,7 @@ class MarkdownTableGenerator:
             lines.extend(p_fix_join(
                 col.ljust(w).center(max(w, w + pad))
                 for col, w in zip(row, self.table.widths))
-                         for row in self.table.bodies)
+                for row in self.table.bodies)
 
         def print_links():
 
@@ -344,7 +437,7 @@ class MarkdownTableGenerator:
                     return 0, link.problem.ordinal
                 if isinstance(link, self.SolutionLink):
                     return link.solution.category.value, \
-                           link.solution.problem_no
+                        link.solution.problem_no
 
             sorted_links = sorted(self.links, key=link_sorter_key)
             links.extend(
@@ -359,6 +452,10 @@ class MarkdownTableGenerator:
 
 
 def inplace_replace_readme_file(generator) -> bool:
+
+    # Update readme.md files on demand
+    #  : Type Generator: () -> Tuple [List [Str], List [Str]]
+    #  : Return is actually updated
 
     file_hash = content_hasher()
     gens_hash = content_hasher()
@@ -425,7 +522,7 @@ class content_hasher:
 
     def __eq__(self, other):
         return isinstance(other, content_hasher) and \
-               self._md5.digest() == other._md5.digest()
+            self._md5.digest() == other._md5.digest()
 
     def __hash__(self) -> int:
         return hash(self._md5.digest())
