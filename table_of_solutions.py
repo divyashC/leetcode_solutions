@@ -4,6 +4,12 @@
 # 生成用于README.md文件的解法文件目录
 # 通过扫描src的子文件夹，解析文件名，生成Markdown规范的文件
 
+"""
+-------------------------------------------------------------------------
+Code from: enihsyou
+Link to code: https://github.com/enihsyou/LeetCode/blob/master/table_of_solutions.py
+"""
+
 import abc
 import datetime
 import enum
@@ -29,7 +35,6 @@ def error(message, *args):
 
 
 class Language(enum.Enum):
-    """ 代表解法使用的编程语言 """
     Kotlin = enum.auto()
     Java = enum.auto()
     Python = enum.auto()
@@ -38,79 +43,41 @@ class Language(enum.Enum):
 
 
 class Metadata:
-    """ 代表LeetCode API获取的一道题目的元信息
-
-    :type id: int
-    :type frontend_id: str
-    :type title: str
-    :type slug: str
-    :type difficulty: int
-    :type site_url: str
-    """
 
     def __init__(self, metadata):
         self.id = metadata[0]
-        """ 题号 """
         self.frontend_id = metadata[1]
-        """ 界面上展示的题号 """
         self.title = metadata[2]
-        """ 题目名字 """
         self.slug = metadata[3]
-        """ 用于URL中的英文名 """
         self.difficulty = metadata[4]
-        """ 题目难度 """
-        self.site_url = f"https://leetcode-cn.com/problems/{self.slug}/"
-        """ 问题的网址 """
+        self.site_url = f"https://leetcode.com/problems/{self.slug}/"
 
     def __repr__(self) -> str:
         return f"Id.{self.id}: [{self.slug}] {self.title} {'★' * self.difficulty}"
 
 
 class Solution:
-    """ 代表一道题目的一个解法
-
-    :type problem_no: int
-    :type category: Language
-    :type solution: str
-    :type last_upd: datetime.datetime
-    """
 
     def __init__(self, metadata_):
         self.problem_no = metadata_[0]
-        """ 所解的题目 """
         self.category = metadata_[1]
-        """ 使用语言 """
         self.solution = metadata_[2]
-        """ 文件在项目中的相对路径 """
         self.last_upd = metadata_[3]
-        """ 文件最后更新时间 """
 
     def __repr__(self) -> str:
         return f"No.{self.problem_no}: [{self.category}] {self.solution} @ {self.last_upd}"
 
 
 class Problem:
-    """ 代表一道LeetCode题目
-
-    :type ordinal: int
-    :type display: str
-    :type solutions: list of Solution
-    :type metadata: Metadata or None
-    """
 
     def __init__(self, metadata_):
         self.ordinal = metadata_[0]
-        """ 真实序号 """
         self.display = metadata_[1]
-        """ 题目名字 """
         self.solutions = []
-        """ 已实现的解法 """
         self.metadata = None
-        """ 题目关联的元信息 """
 
     @property
     def site_url(self) -> Optional[str]:
-        """ 题目的网址 """
         if self.metadata:
             return self.metadata.site_url
         else:
@@ -135,23 +102,17 @@ class Problem:
 
 def scan_for_problems():
     solutions: Dict[int, Problem] = {}
-    # [question, problem]
 
     repo = git.Repo('.')
 
     def scan_for_solutions_internal(root_tree, what_todo):
-        """
-        :type root_tree: git.Tree
-        :type what_todo: (git.Blob) -> None
-        """
+
         for blob in root_tree:
             if not blob.name.startswith('.'):
                 what_todo(blob)
 
     def scan_language_dir(tree):
-        """
-        :type tree: git.Blob | git.Tree
-        """
+
         if not isinstance(tree, git.Tree):
             return
 
@@ -168,10 +129,7 @@ def scan_for_problems():
                 tree, lambda p: scan_solution_file(problem, p))
 
     def scan_solution_file(problem, blob):
-        """
-        :type problem: Problem
-        :type blob: git.Blob | git.Tree
-        """
+
         if not isinstance(blob, git.Blob):
             return
 
@@ -204,7 +162,7 @@ def scan_for_problems():
 
         def thread_function(sink: Dict[int, Metadata]):
             import requests
-            resp = requests.get("https://leetcode-cn.com/api/problems/all")
+            resp = requests.get("https://leetcode.com/api/problems/all")
             for stat_obj in resp.json()["stat_status_pairs"]:
                 stat = stat_obj["stat"]
                 diff = stat_obj["difficulty"]
@@ -233,20 +191,13 @@ def scan_for_problems():
 
 
 class MarkdownTableGenerator:
-    """
-    Markdown Table Generator
-
-    :type table: MarkdownTableGenerator.ElasticTable
-    :type links: list of MarkdownTableGenerator.MarkdownLink
-    """
 
     def __init__(self, problems: Iterable[Problem]):
         self.table = self.ElasticTable(
-            ("No.", "Id.", "Name", "Solutions", "Last Update"))
+            ("Question No.", "Id.", "Name", "Solutions", "Last Update"))
         self.links = list()
 
         self.pad_column = True
-        """ 在元素左右两边添加一个空格 """
 
         for problem in problems:
 
@@ -255,7 +206,6 @@ class MarkdownTableGenerator:
                 continue
 
             def for_frontend(p: Problem):
-                """ 生成 No. 这列的文本 """
 
                 if p.metadata is None:
                     return "-"
@@ -270,7 +220,6 @@ class MarkdownTableGenerator:
                 return link.render_in_table()
 
             def for_ordinal(p: Problem):
-                """ 生成 Id. 这列的文本 """
 
                 if p.metadata is None :
                     return str(p.ordinal)
@@ -278,11 +227,9 @@ class MarkdownTableGenerator:
                     return str(p.metadata.id)
 
             def for_problem(p: Problem):
-                """ 生成 Name 这列的文本 """
                 return p.display
 
             def for_solution(s: Solution):
-                """ 生成 Solutions 这列的文本 """
                 link = self.SolutionLink(
                     solution=s,
                     text=s.category.name,
@@ -302,23 +249,12 @@ class MarkdownTableGenerator:
             ))
 
     class ElasticTable:
-        """ 可自适应宽度的表格
-
-        :type header: tuple[str]
-        :type column: int
-        :type widths: tuple[int]
-        :type bodies: list[tuple[str]]
-        """
 
         def __init__(self, header):
             self.header = header
-            """ 表格标题 """
             self.column = len(header)
-            """ 列数 """
             self.widths = tuple(len(s) for s in self.header)
-            """ 各列的宽度 """
             self.bodies = list()
-            """ 表格的内容 不包括标题、分隔行 """
 
         def add_row(self, row: Tuple[str, ...]):
             assert len(row) == self.column
@@ -332,25 +268,11 @@ class MarkdownTableGenerator:
             return f"{dict(zip(self.header, self.widths))}({len(self.bodies)})"
 
     class MarkdownLink(abc.ABC):
-        """ Markdown Link reference ::
-
-            [text][label]
-            [label]: destination
-
-        https://github.github.com/gfm/#link-reference-definition
-
-        :type text: str
-        :type label: str
-        :type destination: str
-        """
 
         def __init__(self, *, text, label, href):
             self.text = text
-            """ 可见文字 """
             self.label = label
-            """ 内部标志 """
             self.destination = href
-            """ 目标地址 """
 
         def render_in_table(self):
             return f"[{self.text}][{self.label}]"
@@ -366,42 +288,25 @@ class MarkdownTableGenerator:
             return f"[{self.text}][{self.label}]: {self.destination}"
 
     class SolutionLink(MarkdownLink):
-        """ Solution Link reference
-
-        :type solution: Solution
-        """
 
         def __init__(self, solution, *, text, label, href):
             super().__init__(text=text, label=label, href=href)
             self.solution = solution
-            """ 指向的解法对象 """
 
     class ProblemLink(MarkdownLink):
-        """ Problem Link reference
-
-        deprecated, 不在题目名上放链接，放在序号上
-
-        :type problem: Problem
-        """
 
         def __init__(self, problem, *, text, label, href):
             super().__init__(text=text, label=label, href=href)
             self.problem = problem
-            """ 指向的解法对象 """
 
         def render_in_footer(self):
             return f"[{self.label}]: {self.destination}"
 
     class OrdinalLink(MarkdownLink):
-        """ Ordinal Link reference
-
-        :type problem: Problem
-        """
 
         def __init__(self, problem, *, text, label, href):
             super().__init__(text=text, label=label, href=href)
             self.problem = problem
-            """ 指向的解法对象 """
 
         def render_in_footer(self):
             return f"[{self.label}]: {self.destination}"
@@ -412,7 +317,6 @@ class MarkdownTableGenerator:
         pad = 2 if self.pad_column else 0
 
         def p_fix_join(s: Iterable[str]):
-            """ Append prefix and postfix to string """
             return "|".join(('', *s, ''))
 
         def print_header():
@@ -455,11 +359,6 @@ class MarkdownTableGenerator:
 
 
 def inplace_replace_readme_file(generator) -> bool:
-    """ 按需更新README.md文件
-
-    :type generator: ()-> tuple[list[str], list[str]]
-    :return 实际更新了没
-    """
 
     file_hash = content_hasher()
     gens_hash = content_hasher()
