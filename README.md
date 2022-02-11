@@ -76,18 +76,21 @@ _Click on the Problem Number to get redirected to the Question in [Leet Code Web
 _Click on the Programming Language name to get redirected to solution file in this repository_
 
 <!-- table of solutions -->
-| Question No. | Id. |        Name       |      Solutions       |   Last Update    |
-|--------------|-----|-------------------|----------------------|------------------|
-| [1][p1]      | 1   | Two Sum           | [Python][#1 python]  | 2022-02-09 10:29 |
-| [9][p9]      | 9   | Palindrome Number | [Python][#9 python]  | 2022-02-09 11:34 |
-| [13][p13]    | 13  | Roman to Integer  | [Python][#13 python] | 2022-02-09 11:56 |
+| Question No. | Id. |         Name        |      Solutions       |   Last Update    |
+|--------------|-----|---------------------|----------------------|------------------|
+| [1][p1]      | 1   | Two Sum             | [Python][#1 python]  | 2022-02-11 09:50 |
+| [9][p9]      | 9   | Palindrome Number   | [Python][#9 python]  | 2022-02-09 11:34 |
+| [13][p13]    | 13  | Roman to Integer    | [Python][#13 python] | 2022-02-09 11:56 |
+| [58][p58]    | 58  | Length of Last Word | [Python][#58 python] | 2022-02-11 09:50 |
 
 [p1]: https://leetcode.com/problems/two-sum/
 [p9]: https://leetcode.com/problems/palindrome-number/
 [p13]: https://leetcode.com/problems/roman-to-integer/
+[p58]: https://leetcode.com/problems/length-of-last-word/
 [#1 python]: solution/%231%20Two%20Sum/Solution.py
 [#9 python]: solution/%239%20Palindrome%20Number/Solution.py
 [#13 python]: solution/%2313%20Roman%20to%20Integer/Solution.py
+[#58 python]: solution/%2358%20Length%20of%20Last%20Word/Solution.py
 <!-- end of table of solutions -->
 
 _Some solutions may not be efficient though it works._
