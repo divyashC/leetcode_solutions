@@ -85,6 +85,7 @@ _Click on the Programming Language name to get redirected to solution file in th
 | [66][p66]    | 66  | Plus One                        | [Python][#66 python]  | 2022-02-14 11:06 |
 | [67][p67]    | 67  | Add Binary                      | [Python][#67 python]  | 2022-02-14 11:22 |
 | [121][p121]  | 121 | Best Time to Buy and Sell Stock | [Python][#121 python] | 2022-02-14 12:06 |
+| [191][p191]  | 191 | Number of 1 Bits                | [Python][#191 python] | 2022-02-14 12:44 |
 
 [p1]: https://leetcode.com/problems/two-sum/
 [p9]: https://leetcode.com/problems/palindrome-number/
@@ -93,6 +94,7 @@ _Click on the Programming Language name to get redirected to solution file in th
 [p66]: https://leetcode.com/problems/plus-one/
 [p67]: https://leetcode.com/problems/add-binary/
 [p121]: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
+[p191]: https://leetcode.com/problems/number-of-1-bits/
 [#1 python]: solution/%231%20Two%20Sum/Solution.py
 [#9 python]: solution/%239%20Palindrome%20Number/Solution.py
 [#13 python]: solution/%2313%20Roman%20to%20Integer/Solution.py
@@ -100,6 +102,7 @@ _Click on the Programming Language name to get redirected to solution file in th
 [#66 python]: solution/%2366%20Plus%20One/Solution.py
 [#67 python]: solution/%2367%20Add%20Binary/Solution.py
 [#121 python]: solution/%23121%20Best%20Time%20to%20Buy%20and%20Sell%20Stock/Solution.py
+[#191 python]: solution/%23191%20Number%20of%201%20Bits/Solution.py
 <!-- end of table of solutions -->
 
 _Some solutions may not be efficient though it works._
