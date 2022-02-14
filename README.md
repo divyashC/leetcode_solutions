@@ -86,6 +86,7 @@ _Click on the Programming Language name to get redirected to solution file in th
 | [67][p67]    | 67  | Add Binary                      | [Python][#67 python]  | 2022-02-14 11:22 |
 | [121][p121]  | 121 | Best Time to Buy and Sell Stock | [Python][#121 python] | 2022-02-14 12:06 |
 | [171][p171]  | 171 | Excel Sheet Column Number       | [Python][#171 python] | 2022-02-14 12:53 |
+| [190][p190]  | 190 | Reverse Bits                    | [Python][#190 python] | 2022-02-14 13:01 |
 | [191][p191]  | 191 | Number of 1 Bits                | [Python][#191 python] | 2022-02-14 12:44 |
 
 [p1]: https://leetcode.com/problems/two-sum/
@@ -96,6 +97,7 @@ _Click on the Programming Language name to get redirected to solution file in th
 [p67]: https://leetcode.com/problems/add-binary/
 [p121]: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
 [p171]: https://leetcode.com/problems/excel-sheet-column-number/
+[p190]: https://leetcode.com/problems/reverse-bits/
 [p191]: https://leetcode.com/problems/number-of-1-bits/
 [#1 python]: solution/%231%20Two%20Sum/Solution.py
 [#9 python]: solution/%239%20Palindrome%20Number/Solution.py
@@ -105,6 +107,7 @@ _Click on the Programming Language name to get redirected to solution file in th
 [#67 python]: solution/%2367%20Add%20Binary/Solution.py
 [#121 python]: solution/%23121%20Best%20Time%20to%20Buy%20and%20Sell%20Stock/Solution.py
 [#171 python]: solution/%23171%20Excel%20Sheet%20Column%20Number/Solution.py
+[#190 python]: solution/%23190%20Reverse%20Bits/Solution.py
 [#191 python]: solution/%23191%20Number%20of%201%20Bits/Solution.py
 <!-- end of table of solutions -->
 
